@@ -738,9 +738,9 @@ class Ui_MainWindow(object):
         sumL = 0
         totable = []
         for i in range(len(kernels)):
-            x = np.linspace(sumL, sumL + kernels[i].L, 10)
+            x = np.linspace(0, kernels[i].L, 10)
             for _x in x:
-                totable.append([ round(_x,2) , round( N[i][0] + _x*N[i][1], 2) ])
+                totable.append([ round(_x+sumL,2) , round( N[i][0] + _x*N[i][1], 2) ])
             sumL += kernels[i].L
         df = pd.DataFrame(totable,
                           columns=['L', 'N'])
@@ -764,9 +764,9 @@ class Ui_MainWindow(object):
         sumL = 0
         totable = []
         for i in range(len(kernels)):
-            x = np.linspace(sumL, sumL + kernels[i].L, 10)
+            x = np.linspace(0, kernels[i].L, 10)
             for _x in x:
-                totable.append([ round(_x,2) , round( (N[i][0] + _x*N[i][1])/kernels[i].A, 2) ])
+                totable.append([ round(_x+sumL,2) , round( (N[i][0] + _x*N[i][1])/kernels[i].A, 2) ])
             sumL += kernels[i].L
         df = pd.DataFrame(totable,
                           columns=['L', 'σ'])
@@ -790,9 +790,9 @@ class Ui_MainWindow(object):
         sumL = 0
         totable = []
         for i in range(len(kernels)):
-            x = np.linspace(sumL, sumL + kernels[i].L, 10)
+            x = np.linspace(0, kernels[i].L, 10)
             for _x in x:
-                totable.append([ round(_x,2) , round( U[i][0] + _x*U[i][1] + _x**2*U[i][2], 2) ])
+                totable.append([ round(_x+sumL,2) , round( U[i][0] + _x*U[i][1] + (_x**2)*U[i][2], 2) ])
             sumL += kernels[i].L
         df = pd.DataFrame(totable,
                           columns=['L', 'U'])
@@ -800,6 +800,32 @@ class Ui_MainWindow(object):
         #create table
         table = ax.table(cellText=df.values, colLabels=df.columns, loc='center')
 
+        #display table
+        fig.tight_layout()
+        plt.show()
+
+    def displayAll(self, N, U, kernels, left, right, concentrateds):
+        fig, ax = plt.subplots(figsize=(12, 6))
+
+        #hide the axes
+        fig.patch.set_visible(False)
+        ax.axis('off')
+        ax.axis('tight')
+
+        df = pd.DataFrame(generateReactionsMatrix(kernels, left,
+                                                 right) + [''] +['B'] +
+                        [ [de] + ['']*len(kernels) for de in generateReactionsGlobalVector(kernels, concentrateds,left,right)] + [''] +
+                        ['Δ'] + [ [de] + ['']*len(kernels) for de in generateDeltas(kernels, concentrateds,left,right)]
+                          
+                          
+                          
+                          , columns = ['A'] + ['']*len(kernels))
+
+        #create table
+        table = ax.table(cellText=df.values, colLabels=df.columns, loc='center')
+        table.cellLoc = 'left'
+        table.rowLoc = 'left'
+        table.set_fontsize(14)
         #display table
         fig.tight_layout()
         plt.show()
@@ -815,7 +841,10 @@ class Ui_MainWindow(object):
         #self.set_indent()
         self.set_scale()
         self.graphicsView.update()
-        self.tableN(solveN(kernel.objects, concentrated.objects, self.graphicsView.left_sealing, self.graphicsView.right_sealing), kernel.objects)
+        #self.tableN(solveN(kernel.objects, concentrated.objects, self.graphicsView.left_sealing, self.graphicsView.right_sealing), kernel.objects)
+        self.displayAll(solveN(kernel.objects, concentrated.objects, self.graphicsView.left_sealing, self.graphicsView.right_sealing),
+                        solveU(kernel.objects, concentrated.objects, self.graphicsView.left_sealing, self.graphicsView.right_sealing),
+                        kernel.objects, self.graphicsView.left_sealing, self.graphicsView.left_sealing, concentrated.objects)
 
 
     def add_form_point(self):
