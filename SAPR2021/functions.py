@@ -29,7 +29,7 @@ def generateReactionsGlobalVector(kernels, concentrateds, left, right):
     for kern in kernels:
         print('running', kern.Q)
     B = [0] * (count+1)
-    for i in range(count):
+    for i in range(count+1):
         B[i] += knots[i]
         if i != 0:
             B[i] += kernels[i-1].Q * kernels[i-1].L/2
@@ -46,7 +46,10 @@ def generateDeltas(kernels, concentrateds, left, right):
     count = len(kernels)
     A = generateReactionsMatrix(kernels, left, right)
     B = generateReactionsGlobalVector(kernels, concentrateds, left, right)
-    A = linalg.inv(A)
+    try:
+        A = linalg.inv(A)
+    except:
+        linalg.lstsq(A, A)
     ans = numpy.dot(A,B)
     print('Deltas', ans)
     return ans
@@ -55,7 +58,10 @@ def solveN(kernels, concentrateds, left, right):
     count = len(kernels)
     A = generateReactionsMatrix(kernels, left, right)
     B = generateReactionsGlobalVector(kernels, concentrateds, left, right)
-    A = linalg.inv(A)
+    try:
+        A = linalg.inv(A)
+    except:
+        linalg.lstsq(A, A)
     v6 = numpy.dot(A,B)
     N  = numpy.zeros((count, 2), dtype=int).tolist()
     for i in range(count):
@@ -70,7 +76,10 @@ def solveU(kernels, concentrateds, left, right):
     count = len(kernels)
     A = generateReactionsMatrix(kernels, left, right)
     B = generateReactionsGlobalVector(kernels, concentrateds, left, right)
-    A = linalg.inv(A)
+    try:
+        A = linalg.inv(A)
+    except:
+        linalg.lstsq(A, A)
     v6 = numpy.dot(A,B)
     U = numpy.zeros((count, 3), dtype=int).tolist()
     for i in range(count):

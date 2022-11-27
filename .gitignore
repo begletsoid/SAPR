@@ -361,3 +361,6 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/SAPR2021/build/sapr2
+/SAPR2021/dist/sapr2/altgraph-0.17.2.dist-info
+/SAPR2021/dist

@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>799925cf-b580-424a-9593-d6a41b99747f</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>saprmax3.py</StartupFile>
+    <StartupFile>sapr2.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -27,6 +27,8 @@
     <Compile Include="functions.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="sapr.py" />
+    <Compile Include="sapr2.py" />
     <Compile Include="saprmax3.py" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
